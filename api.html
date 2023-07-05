@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starwars</title>
+    <style>
+        .slide {
+            width: 50vw;
+            height: 50vh;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            margin: 0 auto; 
+            position: relative;           
+        }
+        #fButton {
+            position: fixed;
+            right: 10%;
+            top: 25%;
+        }
+        #bButton {
+            position: fixed;
+            left: 10%;
+            top: 25%;
+        }
+    </style>
+</head>
+<body>
+    <button id="fButton">Next &raquo;</button>
+    <button id="bButton">&laquo; Previous</button>
+    
+<script>
+
+    const forwardB = document.getElementById('fButton');
+    const backwardB = document.getElementById('bButton');
+              
+    fetch('https://swapi.dev/api/films').then((res) => res.json())    
+    .then((outputData) => {
+        const films = outputData.results;
+        console.log(films);
+        //console.log(outputData.results[0].title);
+
+        const slides = document.getElementsByClassName('slide');
+        
+        for(let i = 0; i < films.length; i++) {
+            
+            const div = document.createElement("div");
+            div.className = "slide";                   
+            document.body.appendChild(div);
+
+            let content = `<h1 style="text-align:center;">${films[i].title}</h1>
+                           <p style="font-style:oblique; padding-bottom:2rem;">${films[i].opening_crawl}</p>
+                           <ul style="font-weight:bold;"> 
+                                <li style="padding-bottom:1rem;">Director: ${films[i].director}</li>
+                                <li style="padding-bottom:1rem;">Producer: ${films[i].producer}</li>
+                                <li style="padding-bottom:1rem;">Release Date: ${films[i].release_date}</li>
+                            </ul>
+                            <p style="width: 3rem; height: 2rem; position: absolute; bottom: 0; right: 0;">${i+1} of ${films.length}</p>
+                            `;
+            div.innerHTML = content;
+            
+            //const div = `<div class="slide">Hello ${i} </div>`; //can't we use the string literal instead to create div?
+            //console.log(div);
+            //document.body.insertAdjacentElement("beforeend", div);
+
+            if (i == 0) {div.style.display = 'block'; div.style = `background-color: ${randomColor()}`;} //when the page loads, only slide 1 should be displayed and it should have a random colour
+            else {div.style.display = 'none';}               
+                        
+        }
+
+        let slideNum = 0;
+
+        function forward(){
+            //console.log('slideNumber', slideNum);
+            if(slideNum == slides.length - 1){slideNum = 0;}           
+            else {slideNum += 1;}
+            showSlide(slideNum);
+        }
+
+        function backward(){
+            if(slideNum == 0){slideNum = slides.length-1;}                
+            else{slideNum -= 1;}
+            showSlide(slideNum);
+        }
+
+        function showSlide(n){
+            //console.log('working')
+            for ( let i = 0; i < slides.length; i++){
+                if ( i == n){ slides[i].style.display = 'block'; slides[i].style = `background-color: ${randomColor()}`;} //only show the current slide
+                else {slides[i].style.display = 'none';}
+            }
+        }
+
+        function randomColor(){
+            const randomNum1 = Math.floor(Math.random() * 256); 
+            const randomNum2 = Math.floor(Math.random() * 256); 
+            const randomNum3 = Math.floor(Math.random() * 256); //to generate a random rgb color
+            //console.log('random numbers:', randomNum1 + randomNum2 + randomNum3); 
+            const bgColour = `rgba(${randomNum1}, ${randomNum2}, ${randomNum3}, 0.3)`; 
+            //console.log(bgColour);
+            return(bgColour);          
+        }
+
+        forwardB.addEventListener('click', forward);
+        backwardB.addEventListener('click', backward);
+              
+    })
+
+    //create the films array from the API => For every film, create a div (and add them all into the slides array) => create inner HTML of each div to contain the respective info =>
+    //hide the others, except first one at the load => maintain a counter to decide with div to show => if the forwardB is clicked increase the counter and vice versa
+    //showslide function shows only the chosen div, but not others
+   
+
+</script>
+
+</body>
+</html>

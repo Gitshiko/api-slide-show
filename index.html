@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Connected Slideshow</title>
+    <style>
+        .slide {
+            width: 50vw;
+            height: 50vh;
+            border: 2px solid;
+            margin: 0 auto;
+        }
+        #fButton {
+            position: fixed;
+            right: 10%;
+            top: 25%;
+        }
+        #bButton {
+            position: fixed;
+            left: 10%;
+            top: 25%;
+        }
+
+        #one {background-color: aqua;}
+        #two {background-color:bisque; display: none;}
+        #three {background-color:chartreuse; display: none;}
+
+    </style>
+</head>
+<body>
+    <div class="slide" id="one"></div>
+    <div class="slide" id="two"></div>
+    <div class="slide" id="three"></div>
+    <button id="fButton">Forward</button>
+    <button id="bButton">Backward</button>
+
+
+    <script>
+        const slides = document.getElementsByClassName('slide');
+        //console.log(slides);
+        const forwardB = document.getElementById('fButton');
+        const backwardB = document.getElementById('bButton');
+
+        let slideNum = 0;
+        
+        function showSlide(n){
+            console.log('working')
+            for ( let i = 0; i < slides.length; i++){
+                if ( i == n){ slides[i].style.display = 'block';}
+                else {slides[i].style.display = 'none';}
+            }
+        }
+
+        forwardB.addEventListener('click', forwardShow);
+        backwardB.addEventListener('click', backwardShow);
+
+        function forwardShow(){
+            console.log('slideNumber', slideNum);
+
+            if(slideNum == slides.length - 1){
+                slideNum = 0;                
+            } else {
+            slideNum += 1;
+            }
+            //console.log('slideNumber', slideNum);
+            showSlide(slideNum);
+        }
+
+        function backwardShow(){
+            console.log('slideNumber', slideNum);
+
+            if(slideNum == 0){
+                slideNum = slides.length-1;                
+            } else {
+            slideNum -= 1;
+            }
+            //console.log('slideNumber', slideNum);
+            showSlide(slideNum);
+        }
+
+
+
+
+
+    </script>
+    
+</body>
+</html>
